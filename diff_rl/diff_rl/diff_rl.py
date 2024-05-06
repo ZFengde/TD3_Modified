@@ -45,8 +45,8 @@ class TD3(OffPolicyAlgorithm):
         replay_buffer_kwargs: Optional[Dict[str, Any]] = None,
         optimize_memory_usage: bool = False,
         policy_delay: int = 2,
-        target_policy_noise: float = 0.2,
-        target_noise_clip: float = 0.5,
+        target_policy_noise: float = 0.2, # TODO, modified here, from 0.2 to 0
+        target_noise_clip: float = 0.5, # TODO, modified here, from 0.5 to 0
         stats_window_size: int = 100,
         tensorboard_log: Optional[str] = None,
         policy_kwargs: Optional[Dict[str, Any]] = None,
@@ -121,6 +121,7 @@ class TD3(OffPolicyAlgorithm):
                 noise = replay_data.actions.clone().data.normal_(0, self.target_policy_noise)
                 noise = noise.clamp(-self.target_noise_clip, self.target_noise_clip)
                 next_actions = (self.actor_target(replay_data.next_observations) + noise).clamp(-1, 1)
+                # next_actions = (self.actor_target(replay_data.next_observations)).clamp(-1, 1) # TODO, here disgard noise term
 
                 # Compute the next Q-values: min over all critics targets
                 next_q_values = th.cat(self.critic_target(replay_data.next_observations, next_actions), dim=1)
@@ -143,10 +144,10 @@ class TD3(OffPolicyAlgorithm):
             # Delayed policy updates
             if self._n_updates % self.policy_delay == 0:
                 diff_loss = self.actor.diff_loss(replay_data.actions, replay_data.observations)
-                sampled_action = self.actor(obs=replay_data.observations, n_actions=10)
+                sampled_action = self.actor(obs=replay_data.observations, n_actions=10) # Here is multiple actions
                 # q(s, a) to v(s, a), by using multiple actions?
                 # TODO, originally in stable baselines3 lib, need to modify
-                # s = batch, obs_dim, a = batch, n_actions, action_dim
+                # s = batch, obs_dim, a = batch, n_actions, action_dim | Here evaluate for multiple state and the corresponding multiple actions
                 actor_loss = diff_loss - self.critic.q1_multi_forward(replay_data.observations, sampled_action, n_actions=10).mean()
                 # actor_loss = - self.critic.q1_forward(replay_data.observations, sampled_action).mean()
                 actor_losses.append(actor_loss.item())
