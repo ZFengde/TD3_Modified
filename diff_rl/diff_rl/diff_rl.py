@@ -14,10 +14,10 @@ from diff_rl.common.buffers import ReplayBuffer
 from diff_rl.common.off_policy_algorithm import OffPolicyAlgorithm
 from diff_rl.diff_rl.policies import Actor, MlpPolicy, TD3Policy
 
-SelfTD3 = TypeVar("SelfTD3", bound="TD3")
+SelfTD3 = TypeVar("SelfTD3", bound="Diff_TD3")
 
 
-class TD3(OffPolicyAlgorithm):
+class Diff_TD3(OffPolicyAlgorithm):
 
     policy_aliases: ClassVar[Dict[str, Type[BasePolicy]]] = {
         "MlpPolicy": MlpPolicy,
@@ -173,7 +173,7 @@ class TD3(OffPolicyAlgorithm):
         total_timesteps: int = None,
         callback: MaybeCallback = None,
         log_interval: int = 10,
-        tb_log_name: str = "TD3",
+        tb_log_name: str = "Diff_TD3",
         reset_num_timesteps: bool = True,
         progress_bar: bool = False,
     ):
