@@ -45,7 +45,6 @@ class Actor(BasePolicy):
         # actor_net = create_mlp(features_dim, action_dim, net_arch, activation_fn, squash_output=True)
         # self.mu = nn.Sequential(*actor_net)
         self.mu = Diffusion_Policy(state_feat_dim=features_dim, action_dim=action_dim, model=Networks)
-        a = 1
 
     def _get_constructor_parameters(self):
         data = super()._get_constructor_parameters()
