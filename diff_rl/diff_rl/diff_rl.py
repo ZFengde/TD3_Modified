@@ -36,6 +36,7 @@ class Diff_TD3(OffPolicyAlgorithm):
         buffer_size: int = 1_000_000,  # 1e6
         learning_starts: int = 100,
         batch_size: int = 256,
+        n_sampled_actions: int = 10,
         tau: float = 0.005,
         gamma: float = 0.99,
         train_freq: Union[int, Tuple[int, str]] = 1,
@@ -84,6 +85,7 @@ class Diff_TD3(OffPolicyAlgorithm):
         self.policy_delay = policy_delay
         self.target_noise_clip = target_noise_clip
         self.target_policy_noise = target_policy_noise
+        self.n_sampled_actions = n_sampled_actions
 
         if _init_setup_model:
             self._setup_model()
@@ -144,11 +146,11 @@ class Diff_TD3(OffPolicyAlgorithm):
             # Delayed policy updates
             if self._n_updates % self.policy_delay == 0:
                 diff_loss = self.actor.diff_loss(replay_data.actions, replay_data.observations)
-                sampled_action = self.actor(obs=replay_data.observations, n_actions=10) # Here is multiple actions
+                sampled_action = self.actor.multi_actions(obs=replay_data.observations, n_actions=self.n_sampled_actions) # Here is multiple actions
                 # q(s, a) to v(s, a), by using multiple actions?
                 # TODO, originally in stable baselines3 lib, need to modify
                 # s = batch, obs_dim, a = batch, n_actions, action_dim | Here evaluate for multiple state and the corresponding multiple actions
-                actor_loss = diff_loss - self.critic.q1_multi_forward(replay_data.observations, sampled_action, n_actions=10).mean()
+                actor_loss = diff_loss - self.critic.q1_multi_forward(replay_data.observations, sampled_action, n_actions=self.n_sampled_actions).mean()
                 # actor_loss = - self.critic.q1_forward(replay_data.observations, sampled_action).mean()
                 actor_losses.append(actor_loss.item())
 

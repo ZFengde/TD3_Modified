@@ -9,7 +9,8 @@ def main(
 		n_envs,
 		iter_num,
 		seed,
-		learning_rate):
+		learning_rate,
+		n_sampled_actions):
 
 	algo_name = algo
 	log_name = algo_name
@@ -32,7 +33,8 @@ def main(
 				verbose=1, 
 				tensorboard_log=logdir,
 				seed=seed,
-				learning_rate=learning_rate)
+				learning_rate=learning_rate,
+				n_sampled_actions=n_sampled_actions)
 
 	for i in range(iter_num):
 		model.learn(reset_num_timesteps=False, tb_log_name=f"{algo_name}")
@@ -47,6 +49,7 @@ if __name__ == '__main__':
     parser.add_argument('--iter_num', type=int, default=5) # Total_timestep = iter_num * n_envs * n_steps, here is 2000 * 4 * 20480 = 1.2e7
     parser.add_argument('--seed', type=int, default=4)
     parser.add_argument('--learning_rate', type=int, default=1e-4)
+    parser.add_argument('--n_sampled_actions', type=int, default=1)
     args = parser.parse_args()
 
     main(
@@ -55,4 +58,5 @@ if __name__ == '__main__':
 		args.n_envs, 
 		args.iter_num, 
 		args.seed,
-		args.learning_rate)
+		args.learning_rate,
+		args.n_sampled_actions)

@@ -211,7 +211,7 @@ class Diffusion_Policy(nn.Module): # forward method here is generate a sample
         batch_size = state_feat.shape[0] # get batch size
         shape = (batch_size, n_actions, self.action_dim) # make output shape same as action shape
         action = self.p_sample_loop(state_feat, shape) # get x from all diffusion steps
-        return action.squeeze()
+        return action
 
     # ------------------------------------------ training ------------------------------------------#
 
@@ -243,6 +243,11 @@ class Diffusion_Policy(nn.Module): # forward method here is generate a sample
         return self.p_losses(x, state_feat, t)
 
     def forward(self, state_feat, n_actions=1): 
+        state_feat = state_feat.unsqueeze(1).expand(-1, n_actions, -1)
+        actions = self.sample(state_feat, n_actions).squeeze()
+        return actions # here is the action
+    
+    def multi_sample_forward(self, state_feat, n_actions=1): 
         state_feat = state_feat.unsqueeze(1).expand(-1, n_actions, -1)
         actions = self.sample(state_feat, n_actions)
         return actions # here is the action

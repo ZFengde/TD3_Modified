@@ -73,9 +73,9 @@ class Actor(BasePolicy):
         action = self(observation)
         return action
     
-    def multi_actions(self, obs):
+    def multi_actions(self, obs, n_actions):
         features = self.extract_features(obs, self.features_extractor) # flatten
-        multi_actions = self.mu.multi_actions(features)
+        multi_actions = self.mu.multi_sample_forward(features, n_actions)
         return multi_actions
     
 
