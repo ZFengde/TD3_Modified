@@ -36,7 +36,7 @@ class Diff_TD3(OffPolicyAlgorithm):
         buffer_size: int = 1_000_000,  # 1e6
         learning_starts: int = 100,
         batch_size: int = 256,
-        n_sampled_actions: int = 10,
+        n_sampled_actions: int = 1,
         tau: float = 0.005,
         gamma: float = 0.99,
         train_freq: Union[int, Tuple[int, str]] = 1,
