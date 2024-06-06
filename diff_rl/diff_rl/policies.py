@@ -39,11 +39,8 @@ class Actor(BasePolicy):
         self.features_dim = features_dim
         self.activation_fn = activation_fn
 
-        action_dim = get_action_dim(self.action_space)
-        # This is for generate feature and action, TODO for marking
         # here generate actor net for specifying the structure of self.mu
-        # actor_net = create_mlp(features_dim, action_dim, net_arch, activation_fn, squash_output=True)
-        # self.mu = nn.Sequential(*actor_net)
+        action_dim = get_action_dim(self.action_space)
         self.mu = Diffusion_Policy(state_feat_dim=features_dim, action_dim=action_dim, model=Networks)
 
     def _get_constructor_parameters(self):
@@ -77,8 +74,6 @@ class Actor(BasePolicy):
         multi_actions = self.mu.multi_sample_forward(features, n_actions)
         return multi_actions
     
-
-
 class TD3Policy(BasePolicy):
 
     actor: Actor
@@ -189,7 +184,7 @@ class TD3Policy(BasePolicy):
 
     def make_actor(self, features_extractor = None):
         actor_kwargs = self._update_features_extractor(self.actor_kwargs, features_extractor)
-        return Actor(**actor_kwargs).to(self.device)
+        return Actor(**actor_kwargs).to(self.device) # self.actor_kwargs has no effect here, refer to the Actor class
 
     def make_critic(self, features_extractor = None):
         critic_kwargs = self._update_features_extractor(self.critic_kwargs, features_extractor)

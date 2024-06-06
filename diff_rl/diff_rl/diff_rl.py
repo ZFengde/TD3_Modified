@@ -46,8 +46,8 @@ class Diff_TD3(OffPolicyAlgorithm):
         replay_buffer_kwargs: Optional[Dict[str, Any]] = None,
         optimize_memory_usage: bool = False,
         policy_delay: int = 2,
-        target_policy_noise: float = 0.2, # TODO, modified here, from 0.2 to 0
-        target_noise_clip: float = 0.5, # TODO, modified here, from 0.5 to 0
+        target_policy_noise: float = 0.2, 
+        target_noise_clip: float = 0.5,
         stats_window_size: int = 100,
         tensorboard_log: Optional[str] = None,
         policy_kwargs: Optional[Dict[str, Any]] = None,
@@ -123,7 +123,6 @@ class Diff_TD3(OffPolicyAlgorithm):
                 noise = replay_data.actions.clone().data.normal_(0, self.target_policy_noise)
                 noise = noise.clamp(-self.target_noise_clip, self.target_noise_clip)
                 next_actions = (self.actor_target(replay_data.next_observations) + noise).clamp(-1, 1)
-                # next_actions = (self.actor_target(replay_data.next_observations)).clamp(-1, 1) # TODO, here disgard noise term
 
                 # Compute the next Q-values: min over all critics targets
                 next_q_values = th.cat(self.critic_target(replay_data.next_observations, next_actions), dim=1)

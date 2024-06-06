@@ -67,13 +67,6 @@ class Networks(nn.Module): # This network is for generating x_t-1 or epsilon_the
                                        nn.Tanh(),
                                        nn.Linear(64, 64),
                                        nn.Tanh())
-        
-        # self.mid_layer = nn.Sequential(nn.Linear(inputime_dim, 256),
-        #                                nn.Tanh(),
-        #                                nn.Linear(256, 256),
-        #                                nn.Tanh(),
-        #                                nn.Linear(256, 256),
-        #                                nn.Tanh())
 
         self.final_layer = nn.Linear(64, self.action_dim)
 
@@ -95,7 +88,6 @@ class Networks(nn.Module): # This network is for generating x_t-1 or epsilon_the
         else:
             t_embed = self.time_mlp(time)
 
-        # TODO, here need to expand action and state to n_actions
         x = th.cat([action, t_embed, state], dim=-1).float() # action = 6, 100, 1
         action = self.mid_layer(x)
 

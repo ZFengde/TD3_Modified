@@ -417,8 +417,6 @@ class OffPolicyAlgorithm(BaseAlgorithm):
             actions, buffer_actions = self._sample_action(learning_starts, action_noise, env.num_envs)
 
             # Rescale and perform action
-            # actions = np.clip(actions, self.action_space.low, self.action_space.high)
-
             new_obs, rewards, dones, infos = env.step(actions)
 
             self.num_timesteps += env.num_envs
