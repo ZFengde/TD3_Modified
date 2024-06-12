@@ -45,10 +45,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--env_id', type=str, default='Ant-v4') 
     parser.add_argument('--algo', type=str, default='Diff_TD3') 
-    parser.add_argument('--n_envs', type=int, default=6)
+    parser.add_argument('--n_envs', type=int, default=1)
     parser.add_argument('--iter_num', type=int, default=5) # Total_timestep = iter_num * n_envs * n_steps, here is 2000 * 4 * 20480 = 1.2e7
     parser.add_argument('--seed', type=int, default=4)
-    parser.add_argument('--learning_rate', type=float, default=1e-4)
+    parser.add_argument('--learning_rate', type=float, default=6e-4)
     parser.add_argument('--n_sampled_actions', type=int, default=1)
     args = parser.parse_args()
 
