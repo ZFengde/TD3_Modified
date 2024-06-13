@@ -33,7 +33,7 @@ class Diff_TD3(OffPolicyAlgorithm):
         policy: Union[str, Type[TD3Policy]],
         env: Union[GymEnv, str],
         learning_rate: Union[float, Schedule] = 6e-4,
-        buffer_size: int = 2e5,  # 1e6
+        buffer_size: int = 200000,  # 1e6
         learning_starts: int = 10000,
         batch_size: int = 100,
         n_sampled_actions: int = 1,
