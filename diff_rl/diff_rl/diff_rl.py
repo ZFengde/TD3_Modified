@@ -32,13 +32,13 @@ class Diff_TD3(OffPolicyAlgorithm):
         self,
         policy: Union[str, Type[TD3Policy]],
         env: Union[GymEnv, str],
-        learning_rate: Union[float, Schedule] = 6e-4,
-        buffer_size: int = 200000,  # 1e6
-        learning_starts: int = 10000,
-        batch_size: int = 100,
+        learning_rate: Union[float, Schedule] = 3e-4,
+        buffer_size: int = 1000000,  # 1e6
+        learning_starts: int = 100,
+        batch_size: int = 256,
         n_sampled_actions: int = 1,
         tau: float = 0.005,
-        gamma: float = 0.98,
+        gamma: float = 0.99,
         train_freq: Union[int, Tuple[int, str]] = 1,
         gradient_steps: int = 1,
         action_noise: Optional[ActionNoise] = None,
