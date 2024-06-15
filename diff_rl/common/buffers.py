@@ -233,9 +233,10 @@ class ReplayBuffer(BaseBuffer):
         else:
             next_obs = self._normalize_obs(self.next_observations[batch_inds, env_indices, :], env)
 
+        a = self._normalize_obs(self.observations[batch_inds, env_indices, :], env)
         data = (
             self._normalize_obs(self.observations[batch_inds, env_indices, :], env),
-            self.actions[batch_inds, env_indices, :],
+            self.actions[batch_inds, env_indices, :], # sample randomly batch_inds, and then env_indices
             next_obs,
             # Only use dones that are not due to timeouts
             # deactivated by default (timeouts is initialized as an array of False)
@@ -246,7 +247,7 @@ class ReplayBuffer(BaseBuffer):
 
     @staticmethod
     def _maybe_cast_dtype(dtype: np.typing.DTypeLike) -> np.typing.DTypeLike:
-        if dtype == np.float64:
+        if dtype == np.float64: 
             return np.float32
         return dtype
 

@@ -33,7 +33,7 @@ class Diff_TD3(OffPolicyAlgorithm):
         policy: Union[str, Type[TD3Policy]],
         env: Union[GymEnv, str],
         learning_rate: Union[float, Schedule] = 3e-4,
-        buffer_size: int = 1000000,  # 1e6
+        buffer_size: int = 200000,  # 1e6
         learning_starts: int = 100,
         batch_size: int = 256,
         n_sampled_actions: int = 1,
@@ -113,7 +113,7 @@ class Diff_TD3(OffPolicyAlgorithm):
         self._update_learning_rate([self.actor.optimizer, self.critic.optimizer])
 
         actor_losses, critic_losses = [], []
-        for _ in range(gradient_steps):
+        for _ in range(gradient_steps): # update once
             self._n_updates += 1
             # Sample replay buffer
             replay_data = self.replay_buffer.sample(batch_size, env=self._vec_normalize_env)  # type: ignore[union-attr]

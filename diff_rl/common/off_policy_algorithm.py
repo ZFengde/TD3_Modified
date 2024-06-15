@@ -257,7 +257,8 @@ class OffPolicyAlgorithm(BaseAlgorithm):
 
             if not rollout.continue_training:
                 break
-
+            
+            # Here control that only when self.num_timesteps > self.learning_starts, start training
             if self.num_timesteps > 0 and self.num_timesteps > self.learning_starts:
                 # If no `gradient_steps` is specified,
                 # do as many gradients steps as steps performed during the rollout
@@ -283,9 +284,10 @@ class OffPolicyAlgorithm(BaseAlgorithm):
         # Select action randomly or according to policy
         if self.num_timesteps < learning_starts and not (self.use_sde and self.use_sde_at_warmup):
             # Warmup phase
-            unscaled_action = np.array([self.action_space.sample() for _ in range(n_envs)])
+            unscaled_action = np.array([self.action_space.sample() for _ in range(n_envs)]) # totally random action
         else:
             # Note: when using continuous actions,
+            # TODO, check this line
             # we assume that the policy uses tanh to scale the action
             # We use non-deterministic action in the case of SAC, for TD3, it does not matter
             assert self._last_obs is not None, "self._last_obs was not set"
@@ -408,6 +410,7 @@ class OffPolicyAlgorithm(BaseAlgorithm):
 
         callback.on_rollout_start()
         continue_training = True
+        # since train_freq is 1, then num_collected_steps is always refreshed as 0
         while should_collect_more_steps(train_freq, num_collected_steps, num_collected_episodes):
             if self.use_sde and self.sde_sample_freq > 0 and num_collected_steps % self.sde_sample_freq == 0:
                 # Sample a new noise matrix
